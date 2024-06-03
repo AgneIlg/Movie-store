@@ -42,7 +42,7 @@ jobs:
 
     # Run the Postman collection to console
     - name: Run POSTMAN collection to console
-      run: newman run ./Movie-shop.postman_collection.json
+      run: newman run ./Movie-shop.postman_collection.json -e Production.postman_environment.json
 
     # Upload the contents of Test Results directory to workspace
     - name: Output the run Details
