@@ -1,4 +1,5 @@
 name: azure_pipeline.yml
+
 on:
   push:
     branches:
@@ -6,15 +7,15 @@ on:
       
 jobs:
   postman-test-api:
-  
     runs-on: ubuntu-latest
+
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    # Check out the repository
     - uses: actions/checkout@v2
       
-    # INstall Node on the runner
+    # Install Node on the runner
     - name: Install Node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with: 
         node-version: '16.x'
 
@@ -35,19 +36,17 @@ jobs:
           sleep 2
         done
     
-    # Install the newman command line utility and also install the html extra reporter
+    # Install the newman command line utility
     - name: Install newman
-      run: |
-       npm install -D newman
+      run: npm install -g newman
 
-      # run the postman collection to console
+    # Run the Postman collection to console
     - name: Run POSTMAN collection to console
-      run: |
-       newman run ./Movie-shop.postman_collection.json
+      run: newman run ./Movie-shop.postman_collection.json
 
     # Upload the contents of Test Results directory to workspace
     - name: Output the run Details
       uses: actions/upload-artifact@v2
       with: 
-       name: RunReports
-       path: testResults
+        name: RunReports
+        path: testResults
