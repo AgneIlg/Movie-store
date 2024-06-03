@@ -38,12 +38,12 @@ jobs:
     # Install the newman command line utility and also install the html extra reporter
     - name: Install newman
       run: |
-       npm install -D newman
+       npm install -D newman 
 
       # run the postman collection to console
     - name: Run POSTMAN collection to console
       run: |
-       newman run ./Movie-shop.postman_collection.json
+       newman run ./Movie-shop.postman_collection.json -e Production.postman_environment.json
 
     # Upload the contents of Test Results directory to workspace
     - name: Output the run Details
