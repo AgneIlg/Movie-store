@@ -2,7 +2,7 @@ name: azure_pipeline.yml
 on:
   push:
     branches:
-      - master
+      - main
       
 jobs:
   postman-test-api:
@@ -43,7 +43,7 @@ jobs:
       # run the postman collection to console
     - name: Run POSTMAN collection to console
       run: |
-       newman run ./Project1.postman_collection.json
+       newman run ./Movie-shop.postman_collection.json
 
     # Upload the contents of Test Results directory to workspace
     - name: Output the run Details
