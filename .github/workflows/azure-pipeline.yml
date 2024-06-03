@@ -2,7 +2,7 @@ name: azure_pipeline.yml
 on:
   push:
     branches:
-      - master
+      - main
       
 jobs:
   postman-test-api:
