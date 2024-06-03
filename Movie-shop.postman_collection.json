@@ -1,0 +1,519 @@
+{
+	"info": {
+		"_postman_id": "986f911c-82af-4387-9cd1-5aaf88b6774c",
+		"name": "Movie-shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34544633"
+	},
+	"item": [
+		{
+			"name": "create/remove movie",
+			"item": [
+				{
+					"name": "Create movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"title, productionDate, producer, and rating sent matches resopnse title, productionDate, producer, and rating \", function () {\r",
+									"    var requestData = JSON.parse(pm.request.body.raw);\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(requestData.title).to.equal(responseData.title);\r",
+									"    pm.expect(requestData.productionDate).to.equal(responseData.productionDate);\r",
+									"    pm.expect(requestData.producer).to.equal(responseData.producer);\r",
+									"    pm.expect(requestData.rating).to.equal(responseData.rating);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response returns generated id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('id');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"    var responseData = pm.response.json();\r",
+									"\r",
+									"    pm.environment.set(\"movieId\", responseData.id);\r",
+									"    pm.environment.set(\"title\", responseData.title);\r",
+									"    pm.environment.set(\"productionDate\", responseData.productionDate);\r",
+									"    pm.environment.set(\"producer\", responseData.producer);\r",
+									"    pm.environment.set(\"rating\", responseData.rating);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n        \"title\": \"Cinderella\",\r\n        \"productionDate\": \"2015-12-15\",\r\n        \"producer\": \"Charles Perrault\",\r\n        \"rating\": 6.9\r\n    }\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_url}}/movies",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "\nThis endpoint allows you to create a new movie entry. The request should be sent as an HTTP POST to {{Base_url}}/movies with the following payload in the raw request body:\n\n```json\n{\n    \"title\": \"\",\n    \"productionDate\": \"\",\n    \"producer\": \"\",\n    \"rating\": 0\n}\n```\n\n### Test Cases\n- **Case 1**: When all the required parameters are provided correctly.\n- **Case 2**: When the title is missing.\n- **Case 3**: When the production date is missing.\n- **Case 4**: When the producer is missing.\n- **Case 5**: When the rating is missing.\n\nThe response to a successful request (Status: 201) will be in JSON format with the newly created movie entry's details, including the unique identifier (id), title, production date, producer, and rating.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Get movie by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Fixed syntax error",
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has id, title, productionDate, producer and rating from Create movie action\", function () {",
+									"    var responseData = pm.response.json();",
+									"    pm.expect(responseData).to.have.property('id', pm.environment.get(\"movieId\"));",
+									"    pm.expect(responseData).to.have.property('title', pm.environment.get(\"title\"));",
+									"    pm.expect(responseData).to.have.property('productionDate', pm.environment.get(\"productionDate\"));",
+									"    pm.expect(responseData).to.have.property('producer', pm.environment.get(\"producer\"));",
+									"    pm.expect(responseData).to.have.property('rating', pm.environment.get(\"rating\"));",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}/movies/{{movieId}}",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies",
+								"{{movieId}}"
+							]
+						},
+						"description": "\nThis endpoint makes an HTTP GET request to retrieve details of a specific movie with ID 6. The response will be in JSON format and will include the movie's ID, title, production date, producer, and rating.\n\nTo update the descriptions for the tests with the corresponding code, you can use the provided response data to ensure that the tests accurately validate the expected response structure and data types.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"the object matches the one from Create movie\", () => {",
+									"    const movieId = pm.environment.get(\"movieId\");",
+									"    const title = pm.environment.get(\"title\");",
+									"    const productionDate = pm.environment.get(\"productionDate\");",
+									"    const producer = pm.environment.get(\"producer\");",
+									"    const rating = pm.environment.get(\"rating\");",
+									"",
+									"",
+									"const responseData = pm.response.json();",
+									"",
+									"let movieFound = false;",
+									"",
+									"for (let i = 0; i < responseData.length; i++) {",
+									"    let movie = responseData[i];",
+									"    if (movie.id === movieId && movie.title === title && movie.productionDate === productionDate && movie.producer === producer && movie.rating === rating) {",
+									"        movieFound = true;",
+									"        break;",
+									"    }",
+									"}",
+									"",
+									"pm.expect(movieFound).to.be.true;",
+									"",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}/movies",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete movie by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Response body is empty after successful deletion\", function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}/movies/{{movieId}}",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies",
+								"{{movieId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get movie by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}/movies/{{movieId}}",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies",
+								"{{movieId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all movies after deletion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Verify that deleted movie not included to responce body', () => {\r",
+									"    const responseData = pm.response.json();\r",
+									"    responseData.forEach((movie) => {\r",
+									"    pm.expect(movie.id).to.not.equal(pm.environment.get('id'));\r",
+									"});\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}/movies",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get movie/update rating",
+			"item": [
+				{
+					"name": "Create movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"title, productionDate, producer, and rating sent matches resopnse title, productionDate, producer, and rating \", function () {\r",
+									"    var requestData = JSON.parse(pm.request.body.raw);\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(requestData.title).to.equal(responseData.title);\r",
+									"    pm.expect(requestData.productionDate).to.equal(responseData.productionDate);\r",
+									"    pm.expect(requestData.producer).to.equal(responseData.producer);\r",
+									"    pm.expect(requestData.rating).to.equal(responseData.rating);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response returns generated id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('id');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"    var responseData = pm.response.json();\r",
+									"\r",
+									"    pm.environment.set(\"movieId\", responseData.id);\r",
+									"    pm.environment.set(\"title\", responseData.title);\r",
+									"    pm.environment.set(\"productionDate\", responseData.productionDate);\r",
+									"    pm.environment.set(\"producer\", responseData.producer);\r",
+									"    pm.environment.set(\"rating\", responseData.rating);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "   {\r\n        \"title\": \"Poison\",\r\n        \"productionDate\": \"1995-11-21\",\r\n        \"producer\": \"Harry Pope\",\r\n        \"rating\": 8.2\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_url}}/movies",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Rating is updated correctly\", function () {\r",
+									"    pm.expect(pm.response.json().rating.toString()).to.eql('9');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 3,\r\n    \"title\": \"The Matrix\",\r\n    \"productionDate\": \"1999-03-31\",\r\n    \"producer\": \"Joel Silver\",\r\n    \"rating\": 9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_url}}/movies/{{movieId}}",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies",
+								"{{movieId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get movie by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"pm.test('Movie rating was successfully updated', () => {\r",
+									"    const responseData = pm.response.json();\r",
+									"    const newRating = parseFloat(pm.environment.get('rating'));\r",
+									"\r",
+									"    // Check if the responseData is an array\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"\r",
+									"    // Check if the first item in the array has a 'rating' property\r",
+									"    pm.expect(responseData[0]).to.have.property('rating');\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_url}}/movies",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Movie with updated rating exists in the list of movies', () => {\r",
+									"    const updatedRating = pm.environment.get('rating');\r",
+									"\r",
+									"    const responseData = pm.response.json();\r",
+									"    let movieFound = false;\r",
+									"\r",
+									"    responseData.forEach((movie) => {\r",
+									"        if(movie.id === pm.environment.get('id') && movie.rating === updatedRating){\r",
+									"            movieFound = true;\r",
+									"        }\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is an array with at least one element\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}/movies",
+							"host": [
+								"{{Base_url}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

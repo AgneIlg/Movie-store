@@ -1,0 +1,21 @@
+{
+  "name": "movie-store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "newman run Movie-shop.postman_collection.json -e Production.postman_environment.json",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Agne (https://github.com/AgneIlg)",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "newman": "^6.1.2",
+    "nodemon": "^3.1.0"
+  }
+}
